@@ -1,0 +1,47 @@
+
+ LANSNIFF is a utility to scan your private network to determine what IP
+ addresses are being used and if possible what the name of the device is at
+ that address.
+                                                           
+ ---------------------------------------------------------------------------
+ USAGE:
+          LANSNIFF /S start_ip /E end_ip [/FULL] [/SILENT] [/NOLOG]
+
+          EX: LANSNIFF /S 192.168.0.1 /E 192.168.0.5 /FULL
+          EX: LANSNIFF /S 10.0.0.0 /E 10.0.2.255
+
+ ---------------------------------------------------------------------------
+ COMMAND LINE SWITCHES:
+
+ /S       Starting IP Address. The utility will begin with this IP
+          address and advance through each IP address until the End IP
+          Address is reached. IP Address must be in the private available
+          domains, the utility will skip any not within this range. REQUIRED
+
+ /E       Ending IP Address. The utility will end when this IP address is
+          reached. IP Address must be in the private available domains, the
+          utility will skip any not within this range. REQUIRED
+
+ /FULL    Will include unreachable IP addresses in the log file. Default is
+          to skip these addresses in the log. [OPTIONAL]
+
+ /SILENT  Keep batch file from outputting to the screen.
+
+ /NOLOG   Keep batch file from outputting to the log file.
+
+ /I       Set string to identify inactive IP addresses. The string must be
+          wrapped with double quotes if it contains spaces. Default is -n/a-
+
+ /U       Set string to identify unknown devices. The string must be wrapped
+          with double quotes if it contains spaces. Default is -unknown_dev-
+
+ /LF      Specify a path and filename to use for the log.
+
+ ---------------------------------------------------------------------------
+ OUTPUT:
+          The screen will display each IP address as it attempts to identify
+          if its a device and the name. A log file will also be written
+          with the results. The switch /FULL will include IP addresses that
+          were unreachable, which by default are excluded from the log.
+
+ ---------------------------------------------------------------------------
