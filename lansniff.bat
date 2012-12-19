@@ -1,16 +1,16 @@
-:: Author:  Steven R. Stepp
-:: Created: 10/29/2010
-:: TESTED ON - Windows 7 Professional 64-bit
-::
-:: -----------------------------------------------------------------------
+REM Author:  Steven R. Stepp
+REM Created: 10/29/2010
+REM TESTED ON - Windows 7 Professional 64-bit
+REM
+REM -----------------------------------------------------------------------
 @echo off
 cls
 setlocal enableextensions
 SET VERSION=0.1
 
-:: -----------------------------------------------------------------------
-:: Start Main
-:: -----------------------------------------------------------------------
+REM -----------------------------------------------------------------------
+REM Start Main
+REM -----------------------------------------------------------------------
 	CALL :setFull FALSE
 	CALL :setSilent FALSE
 	CALL :setNoLog FALSE
@@ -19,7 +19,7 @@ SET VERSION=0.1
 	CALL :setLogFilename
 	CALL :setKill TRUE
 
-	:: Grab and store the switches from the command line.
+	REM Grab and store the switches from the command line.
 	:Loop
 		IF [%1]==[] GOTO Continue
 		   IF /I [%1] EQU [/FULL] CALL :setFull TRUE
@@ -35,30 +35,30 @@ SET VERSION=0.1
 		GOTO Loop
 	:Continue
 
-	:: Initialize the log files
+	REM Initialize the log files
 	CALL :init
 	
-	:: If no command line switches are passed in or a question mark then 
-	:: display the usage and exit the batch file.
+	REM If no command line switches are passed in or a question mark then 
+	REM display the usage and exit the batch file.
 	IF /I [%KILL%] EQU [TRUE] CALL :echoUsage
 	IF /I [%KILL%] EQU [TRUE] GOTO :end
 	
-	:: Scan and process the given IP range
+	REM Scan and process the given IP range
 	CALL :process
 	
-	:: Finish the output to screen and log
+	REM Finish the output to screen and log
 	CALL :wrap_up
 	
 	endlocal
 	GOTO :end
-:: -----------------------------------------------------------------------
-:: End Main
-:: -----------------------------------------------------------------------
+REM -----------------------------------------------------------------------
+REM End Main
+REM -----------------------------------------------------------------------
 
 
-:: -----------------------------------------------------------------------
-:: FUNCTIONS
-:: -----------------------------------------------------------------------
+REM -----------------------------------------------------------------------
+REM FUNCTIONS
+REM -----------------------------------------------------------------------
 
 	:echoUsage
 		echo.
@@ -175,30 +175,30 @@ SET VERSION=0.1
 	:isIPValid
 		FOR /F "tokens=1,2,3,4 delims=." %%A IN ("%1") DO SET IP_A=%%A&SET IP_B=%%B&SET IP_C=%%C&SET IP_D=%%D
 		
-		:: Private network ranges
-		::   10.0.0.0    - 10.255.255.255
-		::   172.16.0.0  - 172.31.255.255
-		::   192.168.0.0 - 192.168.255.255
-		:: SUBNET A
-		::   CONTINUE isn't used, but we need to do some command so the batch file doesn't error
+		REM Private network ranges
+		REM   10.0.0.0    - 10.255.255.255
+		REM   172.16.0.0  - 172.31.255.255
+		REM   192.168.0.0 - 192.168.255.255
+		REM SUBNET A
+		REM   CONTINUE isn't used, but we need to do some command so the batch file doesn't error
 		IF /I [%IP_A%] EQU [10] (
 			SET CONTINUE=TRUE	
 		) ELSE (
 			IF /I [%IP_A%] EQU [172] (
-				::do nothing
+				REM do nothing
 				SET CONTINUE=TRUE
 			) ELSE (
 				IF /I [%IP_A%] EQU [192] (
-					::do nothing
+					REM do nothing
 					SET CONTINUE=TRUE
 				) ELSE (
-					:: Not within the private network range
+					REM Not within the private network range
 					CALL :setIPValid FALSE
 				)
 			)
 		)
 		
-		:: SUBNET B
+		REM SUBNET B
 		IF /I [%IP_A%] EQU [10] (
 			IF /I %IP_B% LSS 0 CALL :setIPValid FALSE
 			IF /I %IP_B% GTR 255 CALL :setIPValid FALSE
@@ -210,7 +210,7 @@ SET VERSION=0.1
 		IF /I [%IP_A%] EQU [192] (
 			IF /I [%IP_B%] NEQ [168] CALL :setIPValid FALSE
 		)
-		:: SUBNET C
+		REM SUBNET C
 		IF /I [%IP_A%] EQU [10] (
 			IF /I %IP_C% LSS 0 CALL :setIPValid FALSE
 			IF /I %IP_C% GTR 255 CALL :setIPValid FALSE
@@ -223,7 +223,7 @@ SET VERSION=0.1
 			IF /I %IP_C% LSS 0 CALL :setIPValid FALSE
 			IF /I %IP_C% GTR 255 CALL :setIPValid FALSE
 		)
-		:: SUBNET D
+		REM SUBNET D
 		IF /I [%IP_A%] EQU [10] (
 			IF /I %IP_D% LSS 0 CALL :setIPValid FALSE
 			IF /I %IP_D% GTR 255 CALL :setIPValid FALSE
@@ -247,7 +247,7 @@ SET VERSION=0.1
 
 	:init
 		IF /I [%NOLOG%] EQU [FALSE] (
-			:: Set variable for filename of log
+			REM Set variable for filename of log
 			IF /I [%LOGFILE%] EQU [] SET LOGFILE=lansniff_v%VERSION%.log
 		)
 		SET Now=%date%
@@ -256,11 +256,11 @@ SET VERSION=0.1
 	GOTO :eof
 
 	:process
-		:: Lets check to see that we have a starting and ending IP address.
+		REM Lets check to see that we have a starting and ending IP address.
 		CALL :setIPValid TRUE
 		CALL :isIPValid %START_IP%
 		IF /I [%IP_VALID%] == [FALSE] (
-			:: Invalid IP Address, message the user and exit the batch file
+			REM Invalid IP Address, message the user and exit the batch file
 			ECHO.
 			ECHO Invalid Starting IP Address
 			ECHO.
@@ -269,7 +269,7 @@ SET VERSION=0.1
 		)
 		CALL :isIPValid %END_IP%
 		IF /I [%IP_VALID%] == [FALSE] (
-			:: Invalid IP Address, message the user and exit the batch file
+			REM Invalid IP Address, message the user and exit the batch file
 			ECHO.
 			ECHO Invalid Ending IP Address
 			ECHO.
@@ -278,19 +278,19 @@ SET VERSION=0.1
 		)
 		
 		IF /I [%NOLOG%] EQU [FALSE] (
-			:: Create log if doesn't exist, add header to log
+			REM Create log if doesn't exist, add header to log
 			IF NOT EXIST "%LOGFILE%" ECHO LANSNIFF - Log file>"%LOGFILE%"
 			ECHO.>>"%LOGFILE%"
 			ECHO Date       Time		IP		Hostname>>"%LOGFILE%"
 			ECHO ------------------------------------------------------------->>"%LOGFILE%"
 		)
 		
-		:: Parse the start and end IP addresses into individual subnets
+		REM Parse the start and end IP addresses into individual subnets
 		FOR /F "tokens=1,2,3,4 delims=." %%A IN ("%START_IP%") DO SET START_IP_A=%%A&SET START_IP_B=%%B&SET START_IP_C=%%C&SET START_IP_D=%%D
 		FOR /F "tokens=1,2,3,4 delims=." %%A IN ("%END_IP%") DO SET END_IP_A=%%A&SET END_IP_B=%%B&SET END_IP_C=%%C&SET END_IP_D=%%D
 		
-		:: For simplictiy, we will only allow an IP range where the first subnet is the same in
-		:: both the starting and ending IP addresses
+		REM For simplictiy, we will only allow an IP range where the first subnet is the same in
+		REM both the starting and ending IP addresses
 		IF /I [%START_IP_A%] NEQ [%END_IP_A%] (
 			ECHO.
 			ECHO Both the starting and ending IP addresses must be in the same
@@ -300,12 +300,12 @@ SET VERSION=0.1
 			GOTO :end
 		)
 		
-		:: Loop for each subnet
+		REM Loop for each subnet
 		FOR /L %%A IN (%START_IP_A%,1,%END_IP_A%) DO (
 			FOR /L %%B IN (%START_IP_B%,1,%END_IP_B%) DO (
 				FOR /L %%C IN (%START_IP_C%,1,%END_IP_C%) DO (
 					FOR /L %%D IN (%START_IP_D%,1,%END_IP_D%) DO (
-						:: process the IP Address
+						REM process the IP Address
 						CALL :process_ip %%A %%B %%C %%D
 					)
 				)
@@ -315,32 +315,32 @@ SET VERSION=0.1
 	GOTO :eof
 
 	:process_ip
-		:: Process IP Address
+		REM Process IP Address
 
 		SET IP_ADDRESS=%1.%2.%3.%4
 		
-		:: Start ComputerName as blank
+		REM Start ComputerName as blank
 		CALL :setComputerName
 		
 		CALL :setFound FALSE
 		
-		:: First we test to see if the IP address is active before we attempt to lookup a device name
+		REM First we test to see if the IP address is active before we attempt to lookup a device name
 		FOR /F "tokens=2 delims= " %%A IN ('PING %IP_ADDRESS% -n 1 -w 3 ^| FIND "TTL="') DO CALL :setFound TRUE
 		
-		:: If IP Address was active then lookup device name and save as ComputerName
+		REM If IP Address was active then lookup device name and save as ComputerName
 		IF [%FOUND%]==[TRUE] (FOR /F "tokens=2 delims= " %%B IN ('PING -a %IP_ADDRESS% -n 1 -w 100 ^| FIND "[%IP_ADDRESS%]"') DO CALL :setComputerName %%B)
 		
-		:: If IP Address was NOT active then save ComputerName as inactive address
+		REM If IP Address was NOT active then save ComputerName as inactive address
 		IF [%FOUND%]==[FALSE] (
 			CALL :setComputerName %INACTIVE_STR%
 		)
 		
-		:: Check if ComputerName is blank, if so save ComputerName as an unknown device
+		REM Check if ComputerName is blank, if so save ComputerName as an unknown device
 		IF [%COMPUTER_NAME%]==[] (
 			CALL :setComputerName %UNKNOWN_STR%
 		)
 		
-		::Output results to file
+		REM Output results to file
 		IF /I [%NOLOG%] EQU [FALSE] (
 			IF [%FULL%]==[TRUE] (	
 				ECHO %YEAR%-%MONTH%-%DAY% %time%	%IP_ADDRESS%	%COMPUTER_NAME%	>>"%LOGFILE%"
@@ -349,13 +349,13 @@ SET VERSION=0.1
 			)
 		)
 
-		::Output results to screen, unless in SILENT mode
+		REM Output results to screen, unless in SILENT mode
 		IF /I [%SILENT%] EQU [FALSE] ECHO %YEAR%-%MONTH%-%DAY% %time%	%IP_ADDRESS%	%COMPUTER_NAME%
 
 	GOTO :eof
 
 	:tokenize_date
-		::assuming date format Tue 09/20/2010
+		REM assuming date format Tue 09/20/2010
 		setlocal enableextensions
 		SET arg=%2
 		SET YEAR=%arg:~6,4%
@@ -380,11 +380,11 @@ SET VERSION=0.1
 		)
 	GOTO :eof
 
-:: -----------------------------------------------------------------------
-:: END FUNCTIONS
-:: -----------------------------------------------------------------------
+REM -----------------------------------------------------------------------
+REM END FUNCTIONS
+REM -----------------------------------------------------------------------
 
-:: -----------------------------------------------------------------------
-:: END OF BATCH FILE
-:: -----------------------------------------------------------------------
+REM -----------------------------------------------------------------------
+REM END OF BATCH FILE
+REM -----------------------------------------------------------------------
 :end
