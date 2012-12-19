@@ -3,6 +3,8 @@ REM Created: 10/29/2010
 REM TESTED ON - Windows 7 Professional 64-bit
 REM
 REM -----------------------------------------------------------------------
+REM 12/19/2012  Changed to use regular comments from the non-standard double colons
+REM
 @echo off
 cls
 setlocal enableextensions
