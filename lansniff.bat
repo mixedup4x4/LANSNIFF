@@ -8,7 +8,7 @@ REM
 @echo off
 cls
 setlocal enableextensions
-SET VERSION=0.1
+SET VERSION=0.2
 
 REM -----------------------------------------------------------------------
 REM Start Main
